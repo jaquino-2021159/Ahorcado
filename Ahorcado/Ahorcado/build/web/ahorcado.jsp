@@ -17,7 +17,6 @@
                 <div class="fundacion">📚 Fundación Kinal 📚</div>
             </div>
 
-            <!-- Información del juego -->
             <div class="info-juego">
                 <div class="caja-info">
                     <div class="etiqueta-info">Intentos</div>
@@ -40,7 +39,6 @@
                         <div id="visualizadorPalabra" class="letras-palabra"></div>
                     </div>
 
-                    <!-- Pistas -->
                     <div class="contenedor-pistas">
                         <h3>💡 Pistas</h3>
                         <div class="pistas">
@@ -52,26 +50,22 @@
                 </div>
 
                 <div class="seccion-derecha">
-                    <!-- Canvas del ahorcado -->
                     <div class="contenedor-imagen-ahorcado">
                         <canvas id="canvasAhorcado" width="320" height="280"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Entrada de letra -->
             <div class="contenedor-entrada">
                 <input type="text" id="entradaLetra" maxlength="1" placeholder="?" disabled>
                 <button id="btnAdivinar" disabled>Adivinar</button>
             </div>
 
-            <!-- Letras usadas -->
             <div class="letras-usadas">
                 <h4>❌ Letras incorrectas</h4>
                 <div id="letrasUsadas"></div>
             </div>
 
-            <!-- Botones de control -->
             <div class="botones-control">
                 <button id="btnIniciar">🚀 Iniciar</button>
                 <button id="btnPausa" disabled>⏸️ Pausa</button>
@@ -79,10 +73,8 @@
                 <button id="btnSalir">🚪 Salir</button>
             </div>
 
-            <!-- Mensajes -->
             <div id="mensaje" class="mensaje"></div>
 
-            <!-- Imagen de la palabra (oculta) -->
             <img id="imagenPalabra" class="imagen-palabra" style="display: none;" alt="Imagen de la palabra">
         </div>
         <script src="js/script.js"></script>
