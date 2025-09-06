@@ -1,0 +1,70 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4c6ef5, #15aabf);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.contenedor-login {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    width: 320px;
+    text-align: center;
+}
+
+.titulo {
+    margin-bottom: 20px;
+    color: #333333;
+}
+
+.campo {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.campo label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #444444;
+}
+
+.campo input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bbbbbb;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.campo input:focus {
+    border-color: #4c6ef5;
+}
+
+.boton {
+    width: 100%;
+    padding: 12px;
+    background: #4c6ef5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.boton:hover {
+    background: #364fc7;
+}
+
+.error {
+    color: #e03131;
+    font-size: 14px;
+    margin-top: 10px;
+}
