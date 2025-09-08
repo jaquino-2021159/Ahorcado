@@ -8,7 +8,36 @@ let juegoPausado = false;
 let indicePalabraActual = 0;
 let palabrasCompletadas = [];
 
-const palabrasBaseDeDatos = [
+// Esta función es para cargar palabras desde la base de datos
+function cargarPalabrasBaseDeDatos() {
+    const url = 'PalabraControlador?menu=Palabra&accion=ListarJSON&_t=' + new Date().getTime();
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                palabrasBaseDeDatos = data;
+                mostrarMensaje('Palabras cargadas desde la base de datos ', 'exito');
+            } else {
+                
+            }
+            inicializarJuego();
+        })
+        .catch(error => {
+            inicializarJuego();
+        });
+}
+
+function inicializarJuegoCompleto() {
+    try {
+       
+        cargarPalabrasBaseDeDatos(); 
+    } catch (error) {
+       
+    }
+}
+
+let palabrasBaseDeDatos = [
     {
         palabra: 'TELEVISOR',
         pistas: [
@@ -63,7 +92,7 @@ const imagenesAhorcado = [
     'img/4.jpg', // 3 errores
     'img/5.jpg', // 4 errores
     'img/6.jpg', // 5 errores
-    'img/7.jpg'  // 6 errores (juego perdido)
+    'img/7.jpg'  // 6 errores 
 ];
 
 const visualizadorPalabra = document.getElementById('visualizadorPalabra');
@@ -671,6 +700,7 @@ function inicializarJuegoCompleto() {
         configurarCanvas();
         configurarAtajosDeTeclado();
         validarImagenes();
+        cargarPalabrasBaseDeDatos();
         inicializarJuego();
     } catch (error) {
         manejarErrorJuego(error, 'durante la inicialización');
