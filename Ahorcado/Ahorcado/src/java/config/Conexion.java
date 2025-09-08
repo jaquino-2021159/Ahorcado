@@ -9,7 +9,7 @@ public class Conexion {
     private static Conexion instancia;
     private Connection conexion;
 
-    private Conexion() {
+    public Conexion() {
         conectar(); 
     }
 
@@ -17,7 +17,7 @@ public class Conexion {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             String url = "jdbc:mysql://localhost:3306/DB_Ahorcado?useSSL=false&allowPublicKeyRetrieval=true";
-            String user = "quintom";
+            String user = "root";
             String password = "admin";
 
             conexion = DriverManager.getConnection(url, user, password);
