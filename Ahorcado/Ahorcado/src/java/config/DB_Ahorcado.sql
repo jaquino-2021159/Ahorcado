@@ -8,8 +8,15 @@ create table palabras (
 	pista1 varchar(200),
 	pista2 varchar(200),
 	pista3 varchar(200),
-	imagen varchar(200),  -- <-- NUEVA: Columna para la ruta de la imagen
+	imagen varchar(200),  
 	primary key PK_codigoPalabra (codigoPalabra)
+);
+
+create table usuarios (
+    codigoUsuario int auto_increment,
+    usuario varchar(50) not null,
+    contrasena varchar(50) not null,
+    primary key PK_codigoUsuario (codigoUsuario)
 );
 
 -- PROCEDIMIENTOS ALMACENADOS (PALABRAS) -------------------------
@@ -72,3 +79,32 @@ begin
 		where codigoPalabra = in_codPalabra;
 end$$
 Delimiter ;
+
+-- PROCEDIMIENTOS ALMACENADOS (USUARIOS) -------------------------
+-- AGREGAR USUARIO
+Delimiter $$
+create procedure sp_AgregarUsuario (
+    in usu varchar(50),
+    in contra varchar(50))
+begin
+    insert into usuarios (usuario, contrasena)
+    values (usu, contra);
+end$$
+Delimiter ;
+
+call sp_AgregarUsuario('admin', 'admin123');
+
+call sp_AgregarUsuario('jugador1', 'pass1234');
+
+-- VALIDAR USUARIO
+Delimiter $$
+create procedure sp_ValidarUsuario (
+    in usu varchar(50),
+    in contra varchar(50))
+begin
+    select * from usuarios where usuario = usu and contrasena = contra;
+end$$
+Delimiter ;
+
+call sp_ValidarUsuario('admin', 'admin123');
+call sp_ValidarUsuario('jugador1', 'pass1234');
