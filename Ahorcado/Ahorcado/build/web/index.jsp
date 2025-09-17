@@ -10,7 +10,7 @@
     <body>
         <div class="contenedor-login">
             <h1 class="titulo">🔐 Ingreso al Juego</h1>
-            <form method="post">
+            <form method="post" action="Validacion">
                 <div class="campo">
                     <label for="usuario">Usuario:</label>
                     <input type="text" id="usuario" name="usuario" required>
@@ -23,17 +23,11 @@
             </form>
 
             <%
-                String usuario = request.getParameter("usuario");
-                String contrasena = request.getParameter("contrasena");
-
-                if (usuario != null && contrasena != null) {
-                    if (usuario.equals("1") && contrasena.equals("1")) {
-                        response.sendRedirect("ahorcado.jsp");
-                    } else {
+                String error = (String) request.getAttribute("error");
+                if (error != null) {
             %>
-            <p class="error">❌ Usuario o contraseña incorrectos</p>
+            <p class="error">❌ <%= error %></p>
             <%
-                    }
                 }
             %>
         </div>
