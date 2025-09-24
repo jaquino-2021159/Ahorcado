@@ -37,27 +37,21 @@ public class PalabraController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createPalabra(@Valid @RequestBody Palabra palabra) {
+    public ResponseEntity<String> createPalabra(@Valid @RequestBody Palabra palabra) {
         Palabra createdPalabra = palabraService.savePalabra(palabra);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Palabra agregada exitosamente con ID: " + createdPalabra.getCodigoPalabra());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Palabra agregada exitosamente con ID: " + createdPalabra.getCodigoPalabra());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updatePalabra(@PathVariable Integer id, @Valid @RequestBody Palabra palabra) {
+    public ResponseEntity<String> updatePalabra(@PathVariable Integer id, @Valid @RequestBody Palabra palabra) {
         palabraService.updatePalabra(id, palabra);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Palabra con ID " + id + " actualizada exitosamente");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Palabra con ID " + id + " actualizada exitosamente");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deletePalabra(@PathVariable Integer id) {
+    public ResponseEntity<String> deletePalabra(@PathVariable Integer id) {
         palabraService.deletePalabra(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Palabra eliminada exitosamente");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Palabra eliminada exitosamente");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
