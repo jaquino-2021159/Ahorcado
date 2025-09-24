@@ -42,7 +42,7 @@ public class Validacion extends HttpServlet {
             session.setAttribute("usuarioLogueado", user);
             response.sendRedirect("ahorcado.jsp");
         } else {
- 
+            System.out.println("Intento de login fallido. Usuario o contraseña incorrectos para: " + usuario); 
             request.setAttribute("error", "Usuario o contraseña incorrectos");
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }
