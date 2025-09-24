@@ -34,27 +34,21 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createUsuario(@Valid @RequestBody Usuario usuario) {
+    public ResponseEntity<String> createUsuario(@Valid @RequestBody Usuario usuario) {
         Usuario createdUsuario = usuarioService.saveUsuario(usuario);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Usuario agregado exitosamente con ID: " + createdUsuario.getCodigoUsuario());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuario agregado exitosamente con ID: " + createdUsuario.getCodigoUsuario());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> updateUsuario(@PathVariable Integer id, @Valid @RequestBody Usuario usuario) {
+    public ResponseEntity<String> updateUsuario(@PathVariable Integer id, @Valid @RequestBody Usuario usuario) {
         usuarioService.updateUsuario(id, usuario);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Usuario con ID " + id + " actualizado exitosamente");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Usuario con ID " + id + " actualizado exitosamente");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteUsuario(@PathVariable Integer id) {
+    public ResponseEntity<String> deleteUsuario(@PathVariable Integer id) {
         usuarioService.deleteUsuario(id);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Usuario eliminado exitosamente");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Usuario eliminado exitosamente");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
