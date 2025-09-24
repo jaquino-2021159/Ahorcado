@@ -10,9 +10,18 @@
     </head>
 
     <body>
+        <div class="video-background">
+            <video autoplay muted loop id="bg-video">
+                <source src="img/ahorcado.mp4" type="video/mp4">
+                <source src="img/ahorcado.webm" type="video/webm">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+
+
         <div class="contenedor-juego">
             <div class="header">
-                <h1 class="titulo-juego">🎮 JUEGO DEL AHORCADO 🎮</h1>
+                <h1 class="titulo-juego"> JUEGO DEL AHORCADO </h1>
                 <div class="creditos">Realizado por: <strong>Jorge Aquino</strong></div>
                 <div class="fundacion">📚 Fundación Kinal 📚</div>
             </div>
@@ -29,6 +38,10 @@
                 <div class="caja-info">
                     <div class="etiqueta-info">Palabra</div>
                     <div class="valor-info" id="numeroPalabra">0/5</div>
+                    <div class="caja-info">
+                        <div class="etiqueta-info">Tiempo</div>
+                        <div class="valor-info" id="cronometro">5:00</div>
+                    </div>
                 </div>
             </div>
 
