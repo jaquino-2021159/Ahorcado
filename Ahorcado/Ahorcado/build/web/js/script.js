@@ -1,3 +1,8 @@
+let tiempoRestante = 300; 
+let intervaloCronometro = null;
+let cronometroActivo = false;
+
+
 let palabraActual = '';
 let datosPalabraActual = {};
 let letrasAdivinadas = [];
@@ -8,7 +13,6 @@ let juegoPausado = false;
 let indicePalabraActual = 0;
 let palabrasCompletadas = [];
 
-// Esta función es para cargar palabras desde la base de datos
 function cargarPalabrasBaseDeDatos() {
     const url = 'PalabraControlador?menu=Palabra&accion=ListarJSON&_t=' + new Date().getTime();
 
@@ -17,6 +21,8 @@ function cargarPalabrasBaseDeDatos() {
         .then(data => {
             if (data && data.length > 0) {
                 palabrasBaseDeDatos = data;
+                mezclarArray(palabrasBaseDeDatos); 
+
                 mostrarMensaje('Palabras cargadas desde la base de datos ', 'exito');
             } else {
                 
@@ -24,8 +30,16 @@ function cargarPalabrasBaseDeDatos() {
             inicializarJuego();
         })
         .catch(error => {
+            mezclarArray(palabrasBaseDeDatos);
             inicializarJuego();
         });
+}
+
+function mezclarArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
 function inicializarJuegoCompleto() {
@@ -131,6 +145,98 @@ function configurarCanvas() {
     ctx.imageSmoothingQuality = 'high';
 }
 
+function iniciarCronometro() {
+    if (!cronometroActivo) {
+        cronometroActivo = true;
+        tiempoRestante = 300; // 5 minutos
+        intervaloCronometro = setInterval(actualizarCronometro, 1000);
+        actualizarDisplayCronometro();
+    }
+}
+
+function pausarCronometro() {
+    if (cronometroActivo && intervaloCronometro) {
+        clearInterval(intervaloCronometro);
+        intervaloCronometro = null;
+    }
+}
+
+function reanudarCronometro() {
+    if (cronometroActivo && !intervaloCronometro) {
+        intervaloCronometro = setInterval(actualizarCronometro, 1000);
+    }
+}
+
+function detenerCronometro() {
+    cronometroActivo = false;
+    if (intervaloCronometro) {
+        clearInterval(intervaloCronometro);
+        intervaloCronometro = null;
+    }
+    tiempoRestante = 300;
+    actualizarDisplayCronometro();
+}
+
+function actualizarCronometro() {
+    if (tiempoRestante > 0) {
+        tiempoRestante--;
+        actualizarDisplayCronometro();
+        
+        // Tiempo crítico (último minuto)
+        const elementoCronometro = document.getElementById('cronometro');
+        if (tiempoRestante <= 60) {
+            elementoCronometro.classList.add('tiempo-critico');
+        } else {
+            elementoCronometro.classList.remove('tiempo-critico');
+        }
+        
+        // Avisos de tiempo
+        if (tiempoRestante === 120) { // 2 minutos
+            mostrarMensaje('¡Quedan 2 minutos!', 'warning');
+        } else if (tiempoRestante === 60) { // 1 minuto
+            mostrarMensaje('¡Último minuto!', 'error');
+        } else if (tiempoRestante === 10) { // 10 segundos
+            mostrarMensaje('¡10 segundos!', 'error');
+        }
+    } else {
+        // Tiempo agotado
+        detenerCronometro();
+        perderPorTiempo();
+    }
+}
+
+function actualizarDisplayCronometro() {
+    const minutos = Math.floor(tiempoRestante / 60);
+    const segundos = tiempoRestante % 60;
+    const elementoCronometro = document.getElementById('cronometro');
+    elementoCronometro.textContent = `${minutos}:${segundos.toString().padStart(2, '0')}`;
+}
+
+function perderPorTiempo() {
+    juegoActivo = false;
+    mostrarMensaje(`¡Se acabó el tiempo! La palabra era: "${palabraActual}"`, 'error');
+    elementoEstadoJuego.textContent = 'Tiempo agotado';
+    actualizarIU();
+    
+    setTimeout(() => {
+        if (confirm('¿Quieres continuar con la siguiente palabra?')) {
+            if (palabrasCompletadas.length < palabrasBaseDeDatos.length - 1) {
+                do {
+                    indicePalabraActual = (indicePalabraActual + 1) % palabrasBaseDeDatos.length;
+                } while (palabrasCompletadas.includes(indicePalabraActual));
+                
+                seleccionarSiguientePalabra();
+                juegoActivo = true;
+                iniciarCronometro(); // Reiniciar cronómetro
+                elementoEstadoJuego.textContent = 'Jugando';
+                actualizarIU();
+            } else {
+                reiniciarJuego();
+            }
+        }
+    }, 2000);
+}
+
 entradaLetra.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         adivinarLetra();
@@ -160,6 +266,7 @@ function iniciarJuego() {
         indicePalabraActual = 0;
         palabrasCompletadas = [];
         seleccionarSiguientePalabra();
+        iniciarCronometro();
         actualizarIU();
         mostrarMensaje('¡Juego iniciado! ¡Buena suerte!', 'exito');
     } else if (juegoPausado) {
@@ -203,7 +310,7 @@ function mostrarPalabra() {
 
         if (letrasAdivinadas.includes(letra)) {
             divLetra.textContent = letra;
-            divLetra.classList.add('adivinada');
+            divLetra.classList.add('guessed');
         } else {
             divLetra.textContent = '_';
         }
@@ -386,6 +493,7 @@ function palabraCompleta() {
 
 function ganarJuego() {
     juegoActivo = false;
+    detenerCronometro(); 
     mostrandoImagenPalabra = true;
     palabrasCompletadas.push(indicePalabraActual);
 
@@ -421,6 +529,7 @@ function ganarJuego() {
 
                 seleccionarSiguientePalabra();
                 juegoActivo = true;
+                iniciarCronometro();
                 mostrarMensaje('¡Nueva palabra! ¡Continúa jugando!', 'info');
                 elementoEstadoJuego.textContent = 'Jugando';
             } else {
@@ -491,6 +600,7 @@ function perderJuego() {
 function pausarJuego() {
     if (juegoActivo && !juegoPausado) {
         juegoPausado = true;
+        pausarCronometro(); 
         document.querySelector('.contenedor-juego').classList.add('juego-pausado');
         mostrarMensaje('Juego pausado ⏸️', 'info');
         elementoEstadoJuego.textContent = 'Pausado';
@@ -503,6 +613,7 @@ function pausarJuego() {
 function reanudarJuego() {
     if (juegoActivo && juegoPausado) {
         juegoPausado = false;
+        reanudarCronometro();
         document.querySelector('.contenedor-juego').classList.remove('juego-pausado');
         mostrarMensaje('¡Juego reanudado! ▶️', 'exito');
         elementoEstadoJuego.textContent = 'Jugando';
@@ -517,10 +628,14 @@ function reiniciarJuego() {
     palabrasCompletadas = [];
     mostrandoImagenPalabra = false;
 
+    detenerCronometro();
     document.querySelector('.contenedor-juego').classList.remove('juego-pausado');
     btnPausa.textContent = '⏸️ Pausa';
 
+    mezclarArray(palabrasBaseDeDatos);
+    
     seleccionarSiguientePalabra();
+    iniciarCronometro();
     actualizarIU();
     mostrarMensaje('Juego reiniciado 🔄', 'info');
     elementoEstadoJuego.textContent = 'Jugando';
@@ -530,6 +645,7 @@ function salirJuego() {
     if (confirm('¿Estás seguro de que quieres salir del juego?')) {
         juegoActivo = false;
         juegoPausado = false;
+        detenerCronometro(); 
         palabraActual = '';
         letrasAdivinadas = [];
         intentosFallidos = 0;
@@ -563,7 +679,7 @@ function actualizarLetrasUsadas() {
 
     letrasIncorrectas.forEach((letra, index) => {
         const spanLetra = document.createElement('span');
-        spanLetra.className = 'letra-usada';
+        spanLetra.className = 'used-letter';
         spanLetra.textContent = letra;
         spanLetra.style.animationDelay = `${index * 0.1}s`;
         elementoLetrasUsadas.appendChild(spanLetra);
